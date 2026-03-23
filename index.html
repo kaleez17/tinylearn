@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>TinyLearn 🌈 — Fun Learning for Toddlers</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌈</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;background:#fff9f0;min-height:100vh;overflow-x:hidden}
+
+/* NAVBAR */
+nav{background:#fff;box-shadow:0 3px 20px rgba(0,0,0,0.08);position:sticky;top:0;z-index:100;padding:0 24px}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{font-family:'Fredoka One',cursive;font-size:26px;color:#FF6B6B;text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-links{display:flex;gap:6px}
+.nav-link{text-decoration:none;font-family:'Fredoka One',cursive;font-size:14px;padding:8px 16px;border-radius:50px;transition:all 0.2s}
+.nav-link.abc{color:#FF6B6B;background:#fff5f5}
+.nav-link.abc:hover{background:#FF6B6B;color:#fff}
+.nav-link.colors{color:#e6a200;background:#fffbea}
+.nav-link.colors:hover{background:#FFD93D;color:#5a4000}
+.nav-link.animals{color:#2f9e44;background:#f0fff4}
+.nav-link.animals:hover{background:#6BCB77;color:#fff}
+.nav-link.numbers{color:#1864ab;background:#e8f4fd}
+.nav-link.numbers:hover{background:#4D96FF;color:#fff}
+.nav-link.game{color:#6741d9;background:#f3f0ff}
+.nav-link.game:hover{background:#A29BFE;color:#fff}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#FFD93D 0%,#FF6B6B 35%,#A29BFE 65%,#4D96FF 100%);padding:80px 24px 100px;text-align:center;position:relative;overflow:hidden;clip-path:ellipse(110% 100% at 50% 0%)}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Ccircle cx='20' cy='20' r='8' fill='rgba(255,255,255,0.1)'/%3E%3Ccircle cx='70' cy='60' r='12' fill='rgba(255,255,255,0.08)'/%3E%3Ccircle cx='50' cy='80' r='6' fill='rgba(255,255,255,0.12)'/%3E%3C/svg%3E") repeat}
+.hero-title{font-family:'Fredoka One',cursive;font-size:clamp(48px,8vw,88px);color:#fff;text-shadow:4px 4px 0 rgba(0,0,0,0.12);position:relative;line-height:1}
+.hero-sub{font-size:clamp(18px,3vw,26px);color:rgba(255,255,255,0.95);margin-top:14px;font-weight:800;position:relative}
+.hero-emojis{font-size:40px;margin-top:20px;position:relative;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hero-btn{display:inline-block;margin-top:32px;background:#fff;color:#FF6B6B;font-family:'Fredoka One',cursive;font-size:22px;padding:16px 40px;border-radius:50px;text-decoration:none;box-shadow:0 8px 0 rgba(0,0,0,0.1);transition:all 0.2s;position:relative}
+.hero-btn:hover{transform:translateY(-3px);box-shadow:0 11px 0 rgba(0,0,0,0.1)}
+.hero-btn:active{transform:translateY(2px);box-shadow:0 6px 0 rgba(0,0,0,0.1)}
+
+/* CARDS GRID */
+.cards-section{max-width:1100px;margin:0 auto;padding:60px 24px 80px}
+.cards-title{font-family:'Fredoka One',cursive;font-size:36px;text-align:center;color:#444;margin-bottom:40px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.card{border-radius:28px;padding:36px 28px;text-align:center;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 8px 0 rgba(0,0,0,0.1);position:relative;overflow:hidden;display:block}
+.card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.15)}
+.card:hover{transform:translateY(-6px);box-shadow:0 14px 0 rgba(0,0,0,0.1)}
+.card:active{transform:translateY(0);box-shadow:0 8px 0 rgba(0,0,0,0.1)}
+.card.abc{background:#FF6B6B}
+.card.colors{background:#FFD93D}
+.card.animals{background:#6BCB77}
+.card.numbers{background:#4D96FF}
+.card.game{background:#A29BFE}
+.card-icon{font-size:60px;line-height:1;margin-bottom:12px}
+.card-name{font-family:'Fredoka One',cursive;font-size:26px;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,0.1)}
+.card-desc{font-size:14px;color:rgba(255,255,255,0.9);margin-top:6px;font-weight:700}
+.card.colors .card-name,.card.colors .card-desc{color:#5a4000;text-shadow:none}
+
+/* FOOTER */
+footer{text-align:center;padding:40px 24px;font-size:14px;color:#aaa;font-weight:700}
+footer span{color:#FF6B6B}
+
+/* BUBBLES */
+.bubble{position:fixed;border-radius:50%;pointer-events:none;animation:rise linear forwards;z-index:0}
+@keyframes rise{0%{opacity:0.7;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-100vh) scale(0.5)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">🌈 TinyLearn</a>
+    <div class="nav-links">
+      <a href="pages/abc.html" class="nav-link abc">🔤 ABCs</a>
+      <a href="pages/colors.html" class="nav-link colors">🎨 Colors</a>
+      <a href="pages/animals.html" class="nav-link animals">🐾 Animals</a>
+      <a href="pages/numbers.html" class="nav-link numbers">🔢 Numbers</a>
+      <a href="pages/game.html" class="nav-link game">🎮 Game</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-title">🌈 TinyLearn!</div>
+  <div class="hero-sub">A magical world of learning for little ones!</div>
+  <div class="hero-emojis">⭐ 🎉 🌟 🎈 ⭐</div>
+  <a href="pages/abc.html" class="hero-btn">Start Learning! 🚀</a>
+</div>
+
+<div class="cards-section">
+  <div class="cards-title">Choose what to learn today! 🎯</div>
+  <div class="cards-grid">
+    <a href="pages/abc.html" class="card abc">
+      <div class="card-icon">🔤</div>
+      <div class="card-name">Alphabet</div>
+      <div class="card-desc">Learn A to Z with fun!</div>
+    </a>
+    <a href="pages/colors.html" class="card colors">
+      <div class="card-icon">🎨</div>
+      <div class="card-name">Colors & Shapes</div>
+      <div class="card-desc">Explore the rainbow!</div>
+    </a>
+    <a href="pages/animals.html" class="card animals">
+      <div class="card-icon">🐾</div>
+      <div class="card-name">Animals</div>
+      <div class="card-desc">Meet & hear animals!</div>
+    </a>
+    <a href="pages/numbers.html" class="card numbers">
+      <div class="card-icon">🔢</div>
+      <div class="card-name">Numbers</div>
+      <div class="card-desc">Count 1 to 20!</div>
+    </a>
+    <a href="pages/game.html" class="card game">
+      <div class="card-icon">🎮</div>
+      <div class="card-name">Quiz Game</div>
+      <div class="card-desc">Test what you know!</div>
+    </a>
+  </div>
+</div>
+
+<footer>Made with <span>♥</span> for little learners everywhere 🌍</footer>
+
+<script>
+function makeBubble(){
+  const b=document.createElement('div');
+  b.className='bubble';
+  const size=20+Math.random()*40;
+  const colors=['#FF6B6B','#FFD93D','#6BCB77','#4D96FF','#A29BFE','#fd79a8'];
+  b.style.cssText=`width:${size}px;height:${size}px;background:${colors[Math.floor(Math.random()*colors.length)]};left:${Math.random()*100}vw;bottom:-60px;animation-duration:${4+Math.random()*6}s;opacity:0.4`;
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),(4+Math.random()*6)*1000);
+}
+setInterval(makeBubble,800);
+</script>
+</body>
+</html>

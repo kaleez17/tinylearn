@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Colors & Shapes 🎨 — TinyLearn</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../public/shared.css"/>
+<style>
+.hero-colors{background:linear-gradient(135deg,#FFD93D,#FF9F43)}
+.section-title{font-family:'Fredoka One',cursive;font-size:32px;color:#444;margin-bottom:24px;text-align:center}
+.color-stage{background:#fff;border-radius:28px;padding:36px 24px;text-align:center;box-shadow:0 6px 30px rgba(0,0,0,0.08);margin-bottom:32px}
+.color-circle-big{width:160px;height:160px;border-radius:50%;margin:0 auto 20px;transition:background 0.4s,transform 0.3s;box-shadow:0 12px 40px rgba(0,0,0,0.2)}
+.color-label{font-family:'Fredoka One',cursive;font-size:40px;transition:color 0.4s}
+.color-fact{font-size:16px;color:#888;font-weight:700;margin-top:8px}
+.color-palette{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:48px}
+.color-swatch{width:64px;height:64px;border-radius:50%;cursor:pointer;border:5px solid rgba(255,255,255,0.9);box-shadow:0 4px 16px rgba(0,0,0,0.18);transition:transform 0.15s,border 0.15s}
+.color-swatch:hover{transform:scale(1.2)}
+.color-swatch.active{border:5px solid #333;transform:scale(1.15)}
+
+.shapes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+.shape-card{background:#fff;border-radius:24px;padding:24px 16px;text-align:center;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,0.1);transition:transform 0.15s,box-shadow 0.15s}
+.shape-card:hover{transform:translateY(-5px) rotate(3deg);box-shadow:0 10px 0 rgba(0,0,0,0.1)}
+.shape-card:active{transform:translateY(1px) scale(0.97)}
+.shape-name{font-family:'Fredoka One',cursive;font-size:20px;margin-top:12px;color:#444}
+.shape-fact{font-size:12px;color:#aaa;font-weight:700;margin-top:4px}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">🌈 TinyLearn</a>
+    <div class="nav-links">
+      <a href="abc.html" class="nav-link abc">🔤 ABCs</a>
+      <a href="colors.html" class="nav-link colors active">🎨 Colors</a>
+      <a href="animals.html" class="nav-link animals">🐾 Animals</a>
+      <a href="numbers.html" class="nav-link numbers">🔢 Numbers</a>
+      <a href="game.html" class="nav-link game">🎮 Game</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero hero-colors">
+  <div class="page-hero-title">Colors & Shapes! 🎨</div>
+  <div class="page-hero-sub">Tap the circles to explore colors! 🌈</div>
+</div>
+
+<div class="content">
+  <div class="section-title">🌈 Colors of the World</div>
+  <div class="color-stage">
+    <div class="color-circle-big" id="color-circle" style="background:#FF6B6B"></div>
+    <div class="color-label" id="color-label" style="color:#FF6B6B">Red</div>
+    <div class="color-fact" id="color-fact">🍎 Apples are red!</div>
+  </div>
+  <div class="color-palette" id="palette"></div>
+
+  <div class="section-title">🔷 Shapes Around Us</div>
+  <div class="shapes-grid" id="shapes-grid"></div>
+</div>
+
+<footer>Made with <span>♥</span> for little learners 🌍</footer>
+
+<script>
+const colors=[
+  {n:'Red',h:'#FF6B6B',f:'🍎 Apples are red!'},
+  {n:'Orange',h:'#FF9F43',f:'🍊 Oranges are orange!'},
+  {n:'Yellow',h:'#FFD93D',f:'☀️ The sun is yellow!'},
+  {n:'Green',h:'#6BCB77',f:'🌿 Grass is green!'},
+  {n:'Blue',h:'#4D96FF',f:'🌊 The ocean is blue!'},
+  {n:'Purple',h:'#A29BFE',f:'🍇 Grapes are purple!'},
+  {n:'Pink',h:'#fd79a8',f:'🌸 Flowers can be pink!'},
+  {n:'Brown',h:'#a0522d',f:'🐻 Bears are brown!'},
+  {n:'White',h:'#d0d0d0',f:'☁️ Clouds are white!'},
+  {n:'Black',h:'#2d3436',f:'🐼 Pandas have black spots!'},
+  {n:'Teal',h:'#00cec9',f:'🌊 The sea can be teal!'},
+  {n:'Gold',h:'#f9ca24',f:'⭐ Stars shine like gold!'},
+];
+const palette=document.getElementById('palette');
+colors.forEach((c,i)=>{
+  const s=document.createElement('div');
+  s.className='color-swatch'+(i===0?' active':'');
+  s.style.background=c.h;
+  s.onclick=()=>{
+    document.querySelectorAll('.color-swatch').forEach(x=>x.classList.remove('active'));
+    s.classList.add('active');
+    const circ=document.getElementById('color-circle');
+    circ.style.background=c.h;
+    circ.style.transform='scale(1.15)';
+    setTimeout(()=>circ.style.transform='scale(1)',300);
+    document.getElementById('color-label').style.color=c.h;
+    document.getElementById('color-label').textContent=c.n;
+    document.getElementById('color-fact').textContent=c.f;
+    speak(c.n+'. '+c.f.replace(/[🍎🍊☀️🌿🌊🍇🌸🐻☁️🐼⭐]/gu,''));
+  };
+  palette.appendChild(s);
+});
+
+const shapes=[
+  {n:'Circle',f:'Round like the sun!',color:'#FF6B6B',svg:`<svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="36" fill="#FF6B6B"/></svg>`},
+  {n:'Square',f:'4 equal sides!',color:'#4D96FF',svg:`<svg width="80" height="80" viewBox="0 0 80 80"><rect x="6" y="6" width="68" height="68" rx="6" fill="#4D96FF"/></svg>`},
+  {n:'Triangle',f:'3 pointy corners!',color:'#FFD93D',svg:`<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,4 76,76 4,76" fill="#FFD93D"/></svg>`},
+  {n:'Rectangle',f:'Like a door!',color:'#6BCB77',svg:`<svg width="80" height="80" viewBox="0 0 80 80"><rect x="4" y="16" width="72" height="48" rx="5" fill="#6BCB77"/></svg>`},
+  {n:'Star',f:'Wish upon a star!',color:'#A29BFE',svg:`<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,4 50,30 78,30 56,48 64,76 40,60 16,76 24,48 2,30 30,30" fill="#A29BFE"/></svg>`},
+  {n:'Heart',f:'Full of love!',color:'#fd79a8',svg:`<svg width="80" height="80" viewBox="0 0 80 80"><path d="M40 70 C40 70 8 50 8 28 C8 16 18 8 28 12 C34 14 40 22 40 22 C40 22 46 14 52 12 C62 8 72 16 72 28 C72 50 40 70 40 70Z" fill="#fd79a8"/></svg>`},
+  {n:'Diamond',f:'Like a jewel!',color:'#FF9F43',svg:`<svg width="80" height="80" viewBox="0 0 80 80"><polygon points="40,4 76,40 40,76 4,40" fill="#FF9F43"/></svg>`},
+  {n:'Oval',f:'Like an egg!',color:'#74B9FF',svg:`<svg width="80" height="80" viewBox="0 0 80 80"><ellipse cx="40" cy="40" rx="36" ry="26" fill="#74B9FF"/></svg>`},
+];
+const sg=document.getElementById('shapes-grid');
+shapes.forEach(s=>{
+  const el=document.createElement('div');
+  el.className='shape-card';
+  el.innerHTML=s.svg+`<div class="shape-name" style="color:${s.color}">${s.n}</div><div class="shape-fact">${s.f}</div>`;
+  el.onclick=()=>{
+    el.style.transform='translateY(-5px) rotate(10deg) scale(1.05)';
+    setTimeout(()=>el.style.transform='',400);
+    speak(s.n+'. '+s.f);
+  };
+  sg.appendChild(el);
+});
+
+function speak(t){if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=0.82;u.pitch=1.15;window.speechSynthesis.speak(u);}}
+</script>
+</body>
+</html>

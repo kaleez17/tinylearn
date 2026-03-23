@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Animals 🐾 — TinyLearn</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐾</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../public/shared.css"/>
+<style>
+.hero-animals{background:linear-gradient(135deg,#6BCB77,#00b894)}
+.filter-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:32px}
+.filter-btn{border:none;border-radius:50px;padding:10px 22px;font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;transition:all 0.15s;box-shadow:0 3px 0 rgba(0,0,0,0.12)}
+.filter-btn.all{background:#6BCB77;color:#fff}
+.filter-btn.farm{background:#FF9F43;color:#fff}
+.filter-btn.wild{background:#FF6B6B;color:#fff}
+.filter-btn.sea{background:#4D96FF;color:#fff}
+.filter-btn.sky{background:#A29BFE;color:#fff}
+.filter-btn.active,.filter-btn:hover{transform:translateY(-2px);box-shadow:0 5px 0 rgba(0,0,0,0.12)}
+.animals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}
+.animal-card{background:#fff;border-radius:24px;padding:20px 14px;text-align:center;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,0.1);transition:transform 0.15s;position:relative;overflow:hidden}
+.animal-card::before{content:'';position:absolute;top:-20px;right:-20px;width:60px;height:60px;border-radius:50%;opacity:0.12}
+.animal-card:hover{transform:translateY(-5px) scale(1.04)}
+.animal-card:active{transform:scale(0.97)}
+.animal-emoji{font-size:52px;line-height:1}
+.animal-name{font-family:'Fredoka One',cursive;font-size:18px;margin-top:8px;color:#333}
+.animal-sound-text{font-size:12px;color:#aaa;font-weight:700;margin-top:3px}
+.animal-tag{display:inline-block;font-size:10px;font-weight:800;border-radius:20px;padding:3px 10px;margin-top:6px;text-transform:uppercase}
+
+.animal-modal{position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.animal-modal.show{opacity:1;pointer-events:all}
+.animal-modal-box{background:#fff;border-radius:32px;padding:44px 36px;max-width:360px;width:90%;text-align:center;transform:scale(0.8);transition:transform 0.2s;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.animal-modal.show .animal-modal-box{transform:scale(1)}
+.modal-emoji{font-size:96px;line-height:1;animation:bounce 0.6s ease infinite alternate}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+.modal-name{font-family:'Fredoka One',cursive;font-size:36px;margin-top:12px}
+.modal-sound{font-family:'Fredoka One',cursive;font-size:22px;color:#777;margin-top:6px}
+.modal-fact{font-size:14px;color:#aaa;font-weight:700;margin-top:8px;line-height:1.5}
+.modal-close{margin-top:24px;border:none;border-radius:50px;padding:12px 32px;font-family:'Fredoka One',cursive;font-size:20px;cursor:pointer;color:#fff;box-shadow:0 4px 0 rgba(0,0,0,0.15)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">🌈 TinyLearn</a>
+    <div class="nav-links">
+      <a href="abc.html" class="nav-link abc">🔤 ABCs</a>
+      <a href="colors.html" class="nav-link colors">🎨 Colors</a>
+      <a href="animals.html" class="nav-link animals active">🐾 Animals</a>
+      <a href="numbers.html" class="nav-link numbers">🔢 Numbers</a>
+      <a href="game.html" class="nav-link game">🎮 Game</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero hero-animals">
+  <div class="page-hero-title">Animal Friends! 🐾</div>
+  <div class="page-hero-sub">Tap any animal to meet it and hear its sound! 🔊</div>
+</div>
+
+<div class="content">
+  <div class="filter-row">
+    <button class="filter-btn all active" onclick="filter('all',this)">🌍 All Animals</button>
+    <button class="filter-btn farm" onclick="filter('farm',this)">🌾 Farm</button>
+    <button class="filter-btn wild" onclick="filter('wild',this)">🌿 Wild</button>
+    <button class="filter-btn sea" onclick="filter('sea',this)">🌊 Sea</button>
+    <button class="filter-btn sky" onclick="filter('sky',this)">☁️ Sky</button>
+  </div>
+  <div class="animals-grid" id="animals-grid"></div>
+</div>
+
+<div class="animal-modal" id="animal-modal" onclick="closeModal(event)">
+  <div class="animal-modal-box">
+    <div class="modal-emoji" id="m-emoji"></div>
+    <div class="modal-name" id="m-name"></div>
+    <div class="modal-sound" id="m-sound"></div>
+    <div class="modal-fact" id="m-fact"></div>
+    <button class="modal-close" id="m-close" onclick="closeModalDirect()">Bye bye! 👋</button>
+  </div>
+</div>
+
+<footer>Made with <span>♥</span> for little learners 🌍</footer>
+
+<script>
+const animals=[
+  {e:'🐶',n:'Dog',s:'Woof woof!',f:'Dogs are loyal friends. They love to play fetch!',tag:'farm',c:'#FF9F43'},
+  {e:'🐱',n:'Cat',s:'Meow!',f:'Cats love to purr and nap in sunny spots.',tag:'farm',c:'#A29BFE'},
+  {e:'🐮',n:'Cow',s:'Moooo!',f:'Cows give us milk for cheese and yogurt!',tag:'farm',c:'#6BCB77'},
+  {e:'🐷',n:'Pig',s:'Oink oink!',f:'Pigs are very smart — smarter than dogs!',tag:'farm',c:'#FF6B6B'},
+  {e:'🐔',n:'Chicken',s:'Cluck cluck!',f:'Chickens lay eggs that we eat for breakfast!',tag:'farm',c:'#FFD93D'},
+  {e:'🐑',n:'Sheep',s:'Baaaa!',f:'Sheep grow fluffy wool we use to make sweaters!',tag:'farm',c:'#dfe6e9'},
+  {e:'🐴',n:'Horse',s:'Neigh!',f:'Horses can run very fast — up to 55 mph!',tag:'farm',c:'#b8860b'},
+  {e:'🐰',n:'Rabbit',s:'Thump thump!',f:'Rabbits have very long ears to hear far away.',tag:'farm',c:'#fd79a8'},
+  {e:'🦁',n:'Lion',s:'Roarrrr!',f:'Lions are called the King of the Jungle!',tag:'wild',c:'#FF9F43'},
+  {e:'🐘',n:'Elephant',s:'Trumpet!',f:'Elephants never forget — they have great memory!',tag:'wild',c:'#74B9FF'},
+  {e:'🦒',n:'Giraffe',s:'Hum hum!',f:'Giraffes have the longest necks of any animal!',tag:'wild',c:'#FFD93D'},
+  {e:'🐻',n:'Bear',s:'Growlll!',f:'Bears love honey and sleep all winter long!',tag:'wild',c:'#b8860b'},
+  {e:'🦓',n:'Zebra',s:'Bark bark!',f:'Every zebra has a unique stripe pattern!',tag:'wild',c:'#2d3436'},
+  {e:'🐯',n:'Tiger',s:'Rawrr!',f:'Tigers are the biggest wild cats in the world!',tag:'wild',c:'#FF9F43'},
+  {e:'🦊',n:'Fox',s:'Yip yip!',f:'Foxes are clever animals that hunt at night.',tag:'wild',c:'#FF6B6B'},
+  {e:'🐺',n:'Wolf',s:'Awoooo!',f:'Wolves howl at the moon and live in packs.',tag:'wild',c:'#636e72'},
+  {e:'🐬',n:'Dolphin',s:'Click click!',f:'Dolphins are one of the smartest sea animals!',tag:'sea',c:'#4D96FF'},
+  {e:'🐋',n:'Whale',s:'Whooooo!',f:'Blue whales are the biggest animals on Earth!',tag:'sea',c:'#4D96FF'},
+  {e:'🐙',n:'Octopus',s:'Blub blub!',f:'Octopus have 8 arms and can change color!',tag:'sea',c:'#A29BFE'},
+  {e:'🦈',n:'Shark',s:'Chomp!',f:'Sharks have been on Earth for 450 million years!',tag:'sea',c:'#636e72'},
+  {e:'🐠',n:'Clownfish',s:'Blub!',f:'Clownfish live inside sea anemones to stay safe!',tag:'sea',c:'#FF9F43'},
+  {e:'🦅',n:'Eagle',s:'Screech!',f:'Eagles can see 8 times better than humans!',tag:'sky',c:'#b8860b'},
+  {e:'🦜',n:'Parrot',s:'Squawk!',f:'Parrots can talk and repeat what humans say!',tag:'sky',c:'#6BCB77'},
+  {e:'🦋',n:'Butterfly',s:'Flutter!',f:'Butterflies taste with their feet — how funny!',tag:'sky',c:'#fd79a8'},
+  {e:'🦆',n:'Duck',s:'Quack quack!',f:'Ducks love water and can swim from birth!',tag:'sky',c:'#FFD93D'},
+  {e:'🐝',n:'Bee',s:'Bzzz bzzz!',f:'Bees make honey and help flowers grow!',tag:'sky',c:'#FFD93D'},
+];
+
+let currentFilter='all';
+const grid=document.getElementById('animals-grid');
+function render(){
+  grid.innerHTML='';
+  const list=currentFilter==='all'?animals:animals.filter(a=>a.tag===currentFilter);
+  list.forEach(a=>{
+    const el=document.createElement('div');
+    el.className='animal-card';
+    el.style.setProperty('--ac',a.c);
+    el.innerHTML=`<div class="animal-emoji">${a.e}</div><div class="animal-name">${a.n}</div><div class="animal-sound-text">"${a.s}"</div>`;
+    el.onclick=(ev)=>openModal(a,ev);
+    grid.appendChild(el);
+  });
+}
+function filter(tag,btn){
+  currentFilter=tag;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+function openModal(a,ev){
+  document.getElementById('m-emoji').textContent=a.e;
+  document.getElementById('m-name').textContent=a.n;
+  document.getElementById('m-name').style.color=a.c;
+  document.getElementById('m-sound').textContent='"'+a.s+'"';
+  document.getElementById('m-fact').textContent=a.f;
+  document.getElementById('m-close').style.background=a.c;
+  document.getElementById('animal-modal').classList.add('show');
+  showBurst(a.s,a.c,ev);
+  speak(a.n+' says '+a.s+'. '+a.f);
+}
+function closeModal(e){if(e.target===document.getElementById('animal-modal'))closeModalDirect();}
+function closeModalDirect(){document.getElementById('animal-modal').classList.remove('show');}
+function showBurst(text,color,ev){
+  const b=document.createElement('div');
+  b.className='sound-burst';
+  b.textContent=text;
+  b.style.cssText=`background:${color};top:${ev.clientY-30}px;left:${ev.clientX-60}px`;
+  document.body.appendChild(b);
+  setTimeout(()=>b.remove(),1300);
+}
+function speak(t){if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=0.82;u.pitch=1.15;window.speechSynthesis.speak(u);}}
+render();
+</script>
+</body>
+</html>

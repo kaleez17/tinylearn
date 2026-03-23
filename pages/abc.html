@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Alphabet 🔤 — TinyLearn</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔤</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../public/shared.css"/>
+<style>
+.hero-abc{background:linear-gradient(135deg,#FF6B6B,#FF9F43)}
+.abc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:14px}
+.abc-card{border-radius:22px;padding:16px 8px 12px;text-align:center;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;box-shadow:0 5px 0 rgba(0,0,0,0.12);user-select:none;position:relative;overflow:hidden}
+.abc-card:hover{transform:translateY(-4px) scale(1.06)}
+.abc-card:active{transform:translateY(2px) scale(0.97)}
+.abc-card::after{content:'';position:absolute;top:-20px;right:-20px;width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.15)}
+.abc-icon{font-size:32px;line-height:1}
+.abc-letter{font-family:'Fredoka One',cursive;font-size:36px;line-height:1;margin-top:4px}
+.abc-word{font-size:11px;font-weight:800;margin-top:4px;opacity:0.85;letter-spacing:0.5px;text-transform:uppercase}
+.popup{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:200;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.popup.show{opacity:1;pointer-events:all}
+.popup-box{background:#fff;border-radius:32px;padding:48px 40px;text-align:center;max-width:340px;width:90%;transform:scale(0.8);transition:transform 0.2s;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.popup.show .popup-box{transform:scale(1)}
+.popup-icon{font-size:80px}
+.popup-letter{font-family:'Fredoka One',cursive;font-size:72px;line-height:1;margin:8px 0}
+.popup-word{font-family:'Fredoka One',cursive;font-size:28px;color:#666}
+.popup-close{margin-top:24px;background:#FF6B6B;color:#fff;border:none;border-radius:50px;padding:12px 32px;font-family:'Fredoka One',cursive;font-size:20px;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,0.15)}
+.popup-close:active{transform:translateY(2px)}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-logo">🌈 TinyLearn</a>
+    <div class="nav-links">
+      <a href="abc.html" class="nav-link abc active">🔤 ABCs</a>
+      <a href="colors.html" class="nav-link colors">🎨 Colors</a>
+      <a href="animals.html" class="nav-link animals">🐾 Animals</a>
+      <a href="numbers.html" class="nav-link numbers">🔢 Numbers</a>
+      <a href="game.html" class="nav-link game">🎮 Game</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero hero-abc">
+  <div class="page-hero-title">The Alphabet! 🔤</div>
+  <div class="page-hero-sub">Tap any letter to see and hear it! 👆</div>
+</div>
+
+<div class="content">
+  <div class="abc-grid" id="abc-grid"></div>
+</div>
+
+<div class="popup" id="popup" onclick="closePopup(event)">
+  <div class="popup-box">
+    <div class="popup-icon" id="p-icon"></div>
+    <div class="popup-letter" id="p-letter"></div>
+    <div class="popup-word" id="p-word"></div>
+    <button class="popup-close" onclick="closePopupDirect()">Close ✕</button>
+  </div>
+</div>
+
+<footer>Made with <span>♥</span> for little learners 🌍</footer>
+
+<script>
+const letters=[
+  {l:'A',w:'Apple',i:'🍎',bg:'#FF6B6B',c:'#fff'},
+  {l:'B',w:'Ball',i:'⚽',bg:'#FF9F43',c:'#fff'},
+  {l:'C',w:'Cat',i:'🐱',bg:'#FFD93D',c:'#5a4000'},
+  {l:'D',w:'Dog',i:'🐶',bg:'#6BCB77',c:'#fff'},
+  {l:'E',w:'Egg',i:'🥚',bg:'#4D96FF',c:'#fff'},
+  {l:'F',w:'Fish',i:'🐟',bg:'#A29BFE',c:'#fff'},
+  {l:'G',w:'Goat',i:'🐐',bg:'#FF6B6B',c:'#fff'},
+  {l:'H',w:'Hat',i:'🎩',bg:'#FF9F43',c:'#fff'},
+  {l:'I',w:'Ice Cream',i:'🍦',bg:'#74B9FF',c:'#fff'},
+  {l:'J',w:'Jam',i:'🍇',bg:'#A29BFE',c:'#fff'},
+  {l:'K',w:'Kite',i:'🪁',bg:'#6BCB77',c:'#fff'},
+  {l:'L',w:'Lion',i:'🦁',bg:'#FFD93D',c:'#5a4000'},
+  {l:'M',w:'Moon',i:'🌙',bg:'#A29BFE',c:'#fff'},
+  {l:'N',w:'Nest',i:'🪺',bg:'#FF9F43',c:'#fff'},
+  {l:'O',w:'Owl',i:'🦉',bg:'#6BCB77',c:'#fff'},
+  {l:'P',w:'Pig',i:'🐷',bg:'#FF6B6B',c:'#fff'},
+  {l:'Q',w:'Queen',i:'👑',bg:'#FFD93D',c:'#5a4000'},
+  {l:'R',w:'Rainbow',i:'🌈',bg:'#4D96FF',c:'#fff'},
+  {l:'S',w:'Sun',i:'☀️',bg:'#FFD93D',c:'#5a4000'},
+  {l:'T',w:'Tiger',i:'🐯',bg:'#FF9F43',c:'#fff'},
+  {l:'U',w:'Umbrella',i:'☂️',bg:'#A29BFE',c:'#fff'},
+  {l:'V',w:'Violin',i:'🎻',bg:'#FF6B6B',c:'#fff'},
+  {l:'W',w:'Whale',i:'🐋',bg:'#4D96FF',c:'#fff'},
+  {l:'X',w:'Xylophone',i:'🎵',bg:'#74B9FF',c:'#fff'},
+  {l:'Y',w:'Yak',i:'🐂',bg:'#6BCB77',c:'#fff'},
+  {l:'Z',w:'Zebra',i:'🦓',bg:'#FF6B6B',c:'#fff'},
+];
+const grid=document.getElementById('abc-grid');
+letters.forEach(d=>{
+  const el=document.createElement('div');
+  el.className='abc-card';
+  el.style.cssText=`background:${d.bg};color:${d.c}`;
+  el.innerHTML=`<div class="abc-icon">${d.i}</div><div class="abc-letter">${d.l}</div><div class="abc-word">${d.w}</div>`;
+  el.onclick=()=>openPopup(d);
+  grid.appendChild(el);
+});
+function openPopup(d){
+  document.getElementById('p-icon').textContent=d.i;
+  document.getElementById('p-letter').textContent=d.l;
+  document.getElementById('p-letter').style.color=d.bg;
+  document.getElementById('p-word').textContent=d.l+' is for '+d.w;
+  document.getElementById('popup').classList.add('show');
+  speak(d.l+' is for '+d.w);
+}
+function closePopup(e){if(e.target===document.getElementById('popup'))closePopupDirect();}
+function closePopupDirect(){document.getElementById('popup').classList.remove('show');}
+function speak(t){if('speechSynthesis' in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.rate=0.8;u.pitch=1.2;window.speechSynthesis.speak(u);}}
+</script>
+</body>
+</html>
